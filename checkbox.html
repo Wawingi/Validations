@@ -15,10 +15,11 @@
                 //$("#result").html("Checkbox is checked.");
             }
             else if($(this).prop("checked") == false){
+				
 				var str = 1;
 				var encod = btoa(str);
-				console.log("Valor Encodado:", btoa(str));
-				console.log("Valor Decodado:", atob(encod));
+				console.log("Valor Encodado:", btoa(str)); //Binary to ascii
+				console.log("Valor Decodado:", atob(encod)); // Ascii to binary
 
                 //$("#result").html("Checkbox is unchecked.");
             }
