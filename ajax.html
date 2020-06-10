@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>  
+<head>
+    <meta charset="UTF-8">
+    <title>DELETE AJAX</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link href="sweetalert2.min.css" rel="stylesheet" type="text/css" />
+	<link href="loader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<br><br>
+
+	<div class="container">
+		<div class="row">
+			<div class='col-sm-2'>
+				<h3>Acordeon</h3>
+			</div>
+			<div class='col-sm-6'>
+				<a class="btn btn-danger deleta" id="2">Eliminar</a>
+			</div>		
+		</div>
+		<div class="row">
+			<div class='col-sm-6'>
+				<a class="btn btn-primary pesquisar">Pesquisar</a>
+			</div>		
+		</div>
+		<hr>		
+		<div class="row">
+			<div class='col-sm-6'>
+				<a class="btn btn-primary api">Pesquisar API</a>
+			</div>		
+		</div>
+		<div id="cover-spin"></div>
+		<img style="display:none" id="load" src="loader.gif"/>
+		<button onclick="$('#cover-spin').show(0)">Save</button>
+		
+	</div>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script> -->
+	<script src="sweetalert2.min.js"></script>
+	<script src="jquery-3.4.1.js"></script>
+	<script>
+		function deletarDado(id_dado)
+		{
+			$.ajax({
+				type: 'POST',
+				url: 'apagarEvento',
+				data: {
+					'id': id_dado
+				},
+				success: function(data){
+					
+				},
+				error: function(data)
+				{
+					alert('error');
+				}
+			}); 
+		}
+		
+		$(".deleta").click(function () {     
+			Swal.fire({
+			  title: 'Tem a certeza que quer apagar?'+this.id,
+			  text: "You won't be able to revert this!",
+			  icon: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Eliminar'
+			}).then((result) => {
+			  if (result.value) {
+				$('#cover-spin').show(0);
+				//var id = this.id;
+				//deletarDado(id)
+			  }
+			})						
+		});
+		
+		$(".pesquisar").click(function () {
+			(async () => {
+					const { value: email } = await Swal.fire({
+					  title: 'Pesquisar Departamento',
+					  input: 'text',
+					  confirmButtonColor: '#316ee8',
+					  cancelButtonColor: '#f74056',
+					  confirmButtonText: '<i class="fa fa-thumbs-up"></i> Pesquisar',
+					  cancelButtonText: 'Cancelar',
+					  showCancelButton: true,
+					  inputPlaceholder: 'Informe o nome do departamento'
+					})
+
+					if (email) {
+					  Swal.fire(`Entered email: ${email}`)
+					}
+
+			})()								
+		});	
+					
+		$(".api").click(function () {
+			$('#load').show();
+			$.ajax({
+				type: 'GET',
+				url: 'https://jsonplaceholder.typicode.com/posts',
+				success: function(data){
+					//alert(data);
+					$('#load').hide();
+				},
+				error: function(data)
+				{
+					alert('error');
+				}
+			}); 							
+		});	
+
+		
+	</script>
+</body>
+</html>

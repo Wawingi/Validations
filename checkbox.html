@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Check the Status of Checkboxes</title>
+<link href="bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script>
+
+	$(document).ready(function(){
+        $('input[type="checkbox"]').click(function(){
+            if($(this).prop("checked") == true){
+
+                //$("#result").html("Checkbox is checked.");
+            }
+            else if($(this).prop("checked") == false){
+				var str = 1;
+				var encod = btoa(str);
+				console.log("Valor Encodado:", btoa(str));
+				console.log("Valor Decodado:", atob(encod));
+
+                //$("#result").html("Checkbox is unchecked.");
+            }
+        });
+    });
+</script>
+</head>
+<body>	
+	<div class="custom-control custom-switch">
+	  <input type="checkbox" class="custom-control-input" id="customSwitch1">
+	  <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+	</div>
+	<div id="result" style="background: yellow;"></div>
+</body>
+</html>                            

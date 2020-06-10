@@ -1,0 +1,82 @@
+		<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8" />
+      
+        <title>SIS-TFC</title>    
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css" /> 
+    </head>
+
+    <body>
+        
+		<div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">REGISTAR UTILIZADOR</h4><hr>
+                        <form name="Form" onsubmit="return validateForm()" class="needs-validation" novalidate>                 
+                            <!-- 1ª Linha -->
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <div class="form-group mb-3">
+                                        <label for="nome">Nome</label>
+                                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Informe o nome" required>
+                                        <div style="color:red" class="error" id="errorNome"></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="bi">BI n.º</label>
+                                        <input type="text" class="form-control" name="bi" id="bi" placeholder="número do bilhete" required>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 2ª Linha -->
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="data_nascimento">Data de nascimento</label>
+                                        <input type="date" class="form-control" name="data_nascimento" id="data_nascimento" required>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="telefone">Telefone</label>
+                                        <input type="number" class="form-control" name="telefone" id="telefone" placeholder="Informe o número telefónico" required>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-3">
+                                        <label for="email">E-mail</label>
+                                        <input type="email" class="form-control" name="email" id="email" placeholder="informe o email" required>
+                                        <div class="valid-feedback">
+                                            Looks good!
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           
+                            
+                            <hr>
+                            <button type="submit" class="btn btn-primary"><i class="far fa-save"> Registar</i></button>
+                        </form>
+                    </div> <!-- end card-body-->
+                </div> <!-- end card-->
+            </div> <!-- end col-->
+        </div>
+		
+		
+		
+        <script src="vendor.min.js"></script>
+        <script src="app.min.js" difer></script>
+		<script src="validation.js"></script>
+    </body>
+</html>		

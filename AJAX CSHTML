@@ -1,0 +1,641 @@
+@model ProjetoDI.ViewModel.DocumentoViewModel
+@using ProjetoDI.ViewModel;
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="text-center" style="color:#453e75;font-size:34px">
+    <h3 class="page-tittulo">CADASTRAR DOCUMENTOS</h3>
+</div>
+
+<div class="page-alerts" id="page_alerts">
+    <div class="alert alert-success page-alert" id="alert-1">
+    </div>
+</div>
+
+
+<ul id="accordion">
+    <li id="acordionProcessos">
+        <span class="k-link" id="Span2">Processos</span>
+        <div id="accordionContentTree">
+            <div id="gridProcessos">
+                @{Html.RenderPartial("_GridProcessos");}
+            </div>
+        </div>
+    </li>
+
+    <li id="formCriar" class="k-state-active">
+        <span class="k-link" id="Span1">
+            Documento
+        </span>
+        <div id="accordionContentOne">
+
+            @using (Html.BeginForm("Create", "Documento", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="container form-horizontal" style="margin-top:15px;">
+
+                    <form>
+                        <div class="row">
+                            <div class="col-xs-8 col-sm-10 col-lg-11 customForm">
+                                <label for="color">Tipo de documento</label>
+
+                                @(
+                                    Html.Kendo().DropDownListFor(m => m.TipoDocumentoId)
+                                    .Name("TipoDocumentoId")
+                                    .DataSource(source =>
+                                    {
+                                        source.Read(read =>
+                                                    {
+                                                        read.Action("TipoDocumento_DropDownList", "DropDown");
+                                                    })
+                                                    .ServerFiltering(true);
+                                    }).Events(e =>
+                                                        {
+                                                            e.Select("onSelect");
+                                                        })
+                                    .AutoBind(false)
+                                    .CascadeFrom("tipoDocumentos")
+
+                                    .DataTextField("Nome")
+                                    .DataValueField("Id")
+                                    .OptionLabel("Seleccione")
+                                    .HtmlAttributes(new { style = "width: 100%" })
+                                )
+
+                            </div>
+
+                            <div class="col-xs-10 col-sm-6 col-lg-5 customForm" id="outrostipos">
+                                <label>Outro Tipo de Documento</label>
+                                @Html.EditorFor(model => model.OutroTipoDocumento, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-6 col-md-5 customForm">
+                                <label for="color">Entidade Externa</label>
+                                @(
+                                                                                                                                                                                                                                                                Html.Kendo().DropDownListFor(m => m.EntidadeExternaId)
+                                                                                                                                                                                                                                                                .Name("EntidadeExternaId")
+                                                                                                                                                                                                                                                                .DataSource(dataSource =>
+                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                    dataSource.Read("EntidadeExterna_DropDownList", "DropDown");
+                                                                                                                                                                                                                                                                })
+                                                                                                                                                                                                                                                                .Events(e =>
+                                                                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                                                                            e.Select("onSelectEntidadeExterna");
+                                                                                                                                                                                                                                                                        })
+                                                                                                                                                                                                                                                                .DataTextField("Nome")
+                                                                                                                                                                                                                                                                .DataValueField("Id")
+                                                                                                                                                                                                                                                                .OptionLabel("Seleccione")
+                                                                                                                                                                                                                                                                .HtmlAttributes(new { style = "width: 100%" })
+                                )
+                            </div>
+                            <div style="margin-left:40px" class="col-xs-10 col-sm-6 col-md-5 customForm">
+                                <label for="color">Nome da Entidade</label>
+                                @Html.EditorFor(model => model.NomeEntidadeExterna, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-6 col-lg-5 customForm">
+                                <label>Provincia Entidade Interna</label>
+
+                                @(
+                                                                                                Html.Kendo().DropDownListFor(m => m.ProvinciaId)
+                                                                                                .Name("ProvinciaId")
+                                                                                                .DataSource(dataSource =>
+                                                                                                {
+                                                                                                    dataSource.Read("Provincia_DropDownList", "DropDown");
+                                                                                                })
+                                                                                                  .Events(e =>
+                                                                                                                        {
+                                                                                                                            e.Select("onSelectEntidadeInterna");
+                                                                                                                        })
+                                                                                                .DataTextField("Nome")
+                                                                                                .DataValueField("Id")
+                                                                                                .OptionLabel("Seleccione")
+                                                                                                .HtmlAttributes(new { style = "width: 100%" })
+                                )
+
+                            </div>
+                            <div style="max-width:44%;margin-left:40px" class="col-xs-10 col-sm-6 col-md-6 customForm">
+                                <label>Entidade Interna</label>
+                                @(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                Html.Kendo().DropDownListFor(m => m.ServicoInspecaoId)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .Name("ServicoInspecaoId")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .DataSource(source =>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    source.Read(read =>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    read.Action("ServicoInspecao_DropDownList", "DropDown")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .Data("filterServicoInspecao");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                })
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .ServerFiltering(true);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                })
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .AutoBind(false)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .CascadeFrom("ProvinciaId")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .DataTextField("Nome")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .DataValueField("Id")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                .OptionLabel("Seleccione")
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    .HtmlAttributes(new { style = "width: 100%" })
+                                )
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-6 col-lg-5 customForm">
+                                <label for="color" class="control-label">Assunto</label>
+
+                                @(
+                                                                                            Html.Kendo().DropDownListFor(m => m.AssuntoId)
+                                                                                            .Name("AssuntoId")
+                                                                                            .DataSource(source =>
+                                                                                                {
+                                                                                                    source.Read(read =>
+                                                                                                                    {
+                                                                                                                        read.Action("Assunto_DropDownList", "DropDown");
+                                                                                                                    })
+                                                                                                                    .ServerFiltering(true);
+                                                                                                })
+                                                                                            .AutoBind(false)
+                                                                                            .CascadeFrom("tipoDocumentos")
+                                                                                            .DataTextField("Nome")
+                                                                                            .DataValueField("Id")
+                                                                                            .OptionLabel("Seleccione")
+                                                                                            .HtmlAttributes(new { style = "width: 100%" })
+                                )
+
+                            </div>
+
+                            <div style="margin-left:40px" class="col-xs-10 col-sm-6 col-lg-5 customForm ">
+                                <label>Outros Assuntos</label>
+                                @Html.EditorFor(model => model.OutroAssunto, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        @*<div class="col-xs-10 col-sm-6 col-lg-5">
+                                @Html.LabelFor(model => model.DataEntradaInss)
+                                @Html.EditorFor(model => model.DataEntradaInss, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>*@
+                        <div class="row">
+                            <div class="col-xs-5 col-sm-3 col-lg-3 customForm">
+                                @Html.LabelFor(model => model.DataEntradaInss, htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    @Html.EditorFor(model => model.DataEntradaInss, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span class="dataEntradaINSS btn btn-default input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    @Html.ValidationMessageFor(model => model.DataEntradaInss, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*<div class=" col-xs-10 col-sm-6 col-lg-5">
+                                        @Html.LabelFodel => model.DataEntradaDI)
+                                        @Html.Editormodel => model.DataEntradaDI, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>*@
+
+                            <div style="margin-left:65px" class="col-xs-5 col-sm-3 col-lg-3 customForm">
+                                @Html.LabelFor(model => model.DataEntradaDI, htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    @Html.EditorFor(model => model.DataEntradaDI, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span class="dataEntradaDI btn btn-default input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    @Html.ValidationMessageFor(model => model.DataEntradaDI, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div style="margin-left:65px" class="col-xs-10 col-sm-6 col-lg-3 customForm">
+                                @Html.LabelFor(model => model.DataOficio, htmlAttributes: new { @class = "control-label" })
+                                <div class="input-group">
+                                    @Html.EditorFor(model => model.DataOficio, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span class="dataOficio btn btn-default input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                    @Html.ValidationMessageFor(model => model.DataOficio, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class=" col-xs-10 col-sm-6 col-lg-5">
+                                @Html.LabelFor(model => model.DataOficio)
+                                @Html.EditorFor(model => model.DataOficio, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>*@
+                        <div class="row">
+                            <div class=" col-xs-10 col-sm-6 col-md-5 customForm">
+                                @Html.LabelFor(model => model.NumEntradaInss)
+                                @Html.EditorFor(model => model.NumEntradaInss, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div style="margin-left:40px" class="col-xs-10 col-sm-5 col-md-5 customForm">
+                                @Html.LabelFor(model => model.NumOficio)
+                                @Html.EditorFor(model => model.NumOficio, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class=" col-xs-10 col-sm-5 col-md-5 customForm">
+                                @Html.LabelFor(model => model.Contato)
+                                @Html.EditorFor(model => model.Contato, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            <div style="margin-left:40px" class="col-xs-10 col-sm-6 col-md-5 customForm" style="margin-bottom:15px;">
+                                @Html.LabelFor(model => model.NumProcessoInspectivo)
+                                @Html.EditorFor(model => model.NumProcessoInspectivo, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-xs-10 col-sm-12 col-lg-12" style="margin-left:15px; customForm">
+                                @Html.LabelFor(model => model.IsContribuinte)
+                                <div class="input-group">
+                                    <div>
+                                        @Html.RadioButtonFor(model => model.IsContribuinte, new { htmlAttributes = new { @class = "form-control", id = "IsContribuinte" } })
+                                        @Html.ValidationMessageFor(model => model.IsContribuinte, "", new { @class = "text-danger" })
+                                        <label id="lblIscontribuinte">Sim</label>
+                                    </div>
+                                    <div>
+                                        <input id="ckNaoContribuinte" type="radio" value="true">
+                                        <label id="lblIscontribuinteNao">Não</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-6 col-lg-5 contribuinte customForm">
+                                @Html.LabelFor(model => model.NomeContribuinte)
+                                @Html.EditorFor(model => model.NomeContribuinte, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NomeContribuinte, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div style="margin-left:40px" class="col-xs-10 col-sm-6 col-lg-5 contribuinte customForm">
+                                @Html.LabelFor(model => model.Niss)
+                                @Html.EditorFor(model => model.Niss, new { htmlAttributes = new { @class = "form-control", maxlength = "9" } })
+                                @Html.ValidationMessageFor(model => model.Niss, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-10 col-sm-6 col-lg-5 contribuinte customForm">
+                                @Html.LabelFor(model => model.NIF)
+                                @Html.EditorFor(model => model.NIF, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.NIF, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div style="clear: both;">
+                        </div>
+                    </form>
+
+                </div>
+            }
+        </div>
+    </li>
+</ul>
+
+<!-- Button trigger modal -->
+@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>*@
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="text-align:center;margin-top:15px;">
+                <p style="font-size:16px;">
+                    Seu documento foi adicionado com sucesso.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnNovo" type="button" class="btn btn-primary">Novo</button>
+                <button id="btnListar" type="button" class="btn btn-primary">Listar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-xs-18 col-md-12 text-center" style="margin-top:15px;">
+    <button type="submit" id="btnCadastrar">
+        Cadastrar  <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+    </button>
+</div>
+<br /><br /><br /><br />
+<!--
+<div class="col-xs-18 col-md-12 text-center">
+    <div class="btnVoltar" style="margin-bottom:80px;">
+        @Html.ActionLink( " ", "Voltar", "Home",  new { returnUrl = this.Request.UrlReferrer}, new { @class = "glyphicon glyphicon-arrow-left", @title="Voltar na listagem" } )
+    </div>
+</div>-->
+
+
+
+<script>
+    function filterServicoInspecao() {
+        return {
+            filterServicoInspeccao: $("#ProvinciaId").val()
+        };
+    }
+
+
+    $("#accordion").kendoPanelBar({
+        expandMode: "multiple" //options are 'single' and 'multiple'. 'multiple' is the default value
+    });
+
+    var accordion = $("#accordion").data("kendoPanelBar");
+    // select the item with ID, "item1"
+    accordion.select("#formCriar");
+
+    function filterInterface() {
+        return {
+            deviceInterface: $("#DeviceInterfaces").val()
+        };
+    }
+
+
+
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#Niss').simpleMask({ 'mask': '#########' });
+        $('#ckNaoContribuinte').prop('checked', false);
+        $(".contribuinte").hide();
+        $('#ckNaoContribuinte').prop('checked', true);
+
+
+
+        $("#page_alerts").hide();
+        $("#outrostipos").hide();
+
+        var firstOpeDataEntradaInss = true;
+        var firstOpeDataEntradaDI = true;
+        var firstOpeDataOficio = true;
+
+
+
+
+        $('#DataEntradaInss').datetimepicker({
+            daysOfWeekDisabled: [0, 6],
+            format: 'DD/MM/YYYY',
+            locale: 'pt',
+            maxDate: new Date,
+
+        }).on("dp.show", function () {
+            console.log("dtp open");
+            if (firstOpeDataEntradaInss == true) {
+                $(this).data('DateTimePicker').date($('#@Html.IdFor(m=>m.DataEntradaInss)').val());
+                firstOpeDataEntradaInss = false;
+                }
+            });
+
+        //Método para activar data apartir do icone data entrada INSS
+        $(document).ready(function () {
+            $('.dataEntradaINSS').click(function () {
+                $("#DataEntradaInss").focus();
+            });
+        });
+
+
+        $('#DataEntradaDI').datetimepicker({
+            daysOfWeekDisabled: [0, 6],
+            format: 'DD/MM/YYYY',
+            locale: 'pt',
+            maxDate: new Date,
+        }).on("dp.show", function () {
+            console.log("dtp open");
+            if (firstOpeDataEntradaDI == true) {
+                $(this).data('DateTimePicker').date($('#@Html.IdFor(m=>m.DataEntradaDI)').val());
+                firstOpeDataEntradaDI = false;
+                }
+            });
+
+        //Método para activar data apartir do icone data entrada DI (ISS)
+        $(document).ready(function () {
+            $('.dataEntradaDI').click(function () {
+                $("#DataEntradaDI").focus();
+            });
+        });
+        $("#DataEntradaDI").val('');
+
+
+
+        $('#DataOficio').datetimepicker({
+            daysOfWeekDisabled: [0, 6],
+            format: 'DD/MM/YYYY',
+            locale: 'pt',
+            maxDate: new Date,
+        }).on("dp.show", function () {
+            console.log("dtp open");
+            if (firstOpeDataOficio == true) {
+                $(this).data('DateTimePicker').date($('#@Html.IdFor(m=>m.DataOficio)').val());
+                firstOpeDataOficio = false;
+                }
+            });
+
+        //Método para activar data apartir do icone data entrada DI (ISS)
+        $(document).ready(function () {
+            $('.dataOficio').click(function () {
+                $("#DataOficio").focus();
+            });
+        });
+
+        $("#DataEntradaInss").val('');
+        $("#DataOficio").val('');
+
+        $("#btnCadastrar").click(function () {
+
+            var checked = [];
+            for (var i in checkedIds) {
+                if (checkedIds[i]) {
+                    checked.push(i);
+                }
+            }
+
+            var isContr = false;
+            if ($("input[name='IsContribuinte']:checked").length>0)
+                isContr   = $("input[name='IsContribuinte']:checked")[0].checked;
+
+            var DocumentoViewModel = {
+                TipoDocumentoId: $('#@Html.IdFor(m=>m.TipoDocumentoId)').val(),
+                AssuntoId: $('#@Html.IdFor(m=>m.AssuntoId)').val(),
+                ProvinciaId: $('#@Html.IdFor(m=>m.ProvinciaId)').val(),
+                ServicoInspecaoId: $('#@Html.IdFor(m=>m.ServicoInspecaoId)').val(),
+                DataEntradaInss: $('#@Html.IdFor(m=>m.DataEntradaInss)').val(),
+                DataEntradaDI: $('#@Html.IdFor(m=>m.DataEntradaDI)').val(),
+                DataOficio: $('#@Html.IdFor(m=>m.DataOficio)').val(),
+                NumEntradaInss: $('#@Html.IdFor(m=>m.NumEntradaInss)').val(),
+                NumOficio: $('#@Html.IdFor(m=>m.NumOficio)').val(),
+                NumProcessoInspectivo: $('#@Html.IdFor(m=>m.NumProcessoInspectivo)').val(),
+                ProcessosAssociados: checked,
+                Estado: $('#@Html.IdFor(m=>m.Estado)').val(),
+                EntidadeExternaId: $('#@Html.IdFor(m=>m.EntidadeExternaId)').val(),
+                NomeEntidadeExterna: $('#@Html.IdFor(m=>m.NomeEntidadeExterna)').val(),
+                Contato: $('#@Html.IdFor(m=>m.Contato)').val(),
+                IsDocumento: false,
+                IsProcesso: false,
+                IsContribuinte: isContr,
+                NomeContribuinte: $('#@Html.IdFor(m=>m.NomeContribuinte)').val(),
+                Niss: $('#@Html.IdFor(m=>m.Niss)').val(),
+                NIF: $('#@Html.IdFor(m=>m.NIF)').val(),
+                OutroTipoDocumento: $('#@Html.IdFor(m=>m.OutroTipoDocumento)').val(),
+                OutroAssunto:$('#@Html.IdFor(m=>m.OutroAssunto)').val()
+            }
+
+
+            $.ajax({
+                type: "post",
+                url: "/Documento/Create",
+                data: DocumentoViewModel,
+                datatype: "json",
+                cache: false,
+                success: function(data) {
+                    if (data.success) {
+                        limparCampos();
+                        $('#exampleModal').modal('show');
+                    } else {
+                        alert('Erro ao cadastrar');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Erro ao cadastrar');
+                }
+            });
+        });
+    });
+
+    function limparCampos() {
+        //$("#TipoDocumentoId").val('');
+        $("#OutroTipoDocumento").val('');
+
+        //$("#ProvinciaId").val('');
+
+        $("#NomeEntidadeExterna").val('');
+
+        $("#OptionLabel").val('Seleccione');
+        $("#OutroAssunto").val('');
+        $("#DataEntradaInss").val('');
+        $("#DataEntradaDI").val('');
+        $("#DataOficio").val('');
+        $("#NumEntradaInss").val('');
+        $("#NumOficio").val('');
+        $("#Contato").val('');
+        $("#NumProcessoInspectivo").val('');
+        $("#NomeContribuinte").val('');
+        $("#Niss").val('');
+        $("#NIF").val('');
+
+    }
+
+
+    $("#btnNovo").click(function () {
+        window.location.href = '/Documento/Create/'
+    });
+    $("#btnListar").click(function () {
+        window.location.href = '/Home/Index/'
+    });
+
+    function onSelect(e) {
+        if (e.dataItem) {
+            var selectValue = e.dataItem.Nome;
+
+            if (selectValue =="Outros tipos") {
+                $("#outrostipos").show();
+            } else {
+                $("#outrostipos").hide();
+            }
+        }
+    }
+
+    function onSelectEntidadeInterna(e) {
+        if (e.dataItem) {
+            var selectValue = e.dataItem.Nome;
+
+            if (selectValue == "Seleccione") {
+                var dropdownlist = $("#EntidadeExternaId").data("kendoDropDownList");
+                dropdownlist.enable(true);
+                dropdownlist.select(0);
+
+            } else {
+
+                var dropdownlist = $("#EntidadeExternaId").data("kendoDropDownList");
+                dropdownlist.select(0);
+                dropdownlist.enable(false);
+                $("#NomeEntidadeExterna").prop("disabled", true);
+            }
+        }
+    }
+
+
+
+
+    function onSelectEntidadeExterna(e) {
+        if (e.dataItem) {
+            var selectValue = e.dataItem.Nome;
+
+            if (selectValue == "Seleccione") {
+                $("#NomeEntidadeExterna").val('');
+                $("#NomeEntidadeExterna").prop("disabled", true);
+
+                var dropdownlist = $("#ProvinciaId").data("kendoDropDownList");
+                dropdownlist.enable(true);
+                dropdownlist.select(0);
+
+            } else {
+                $("#NomeEntidadeExterna").prop("disabled", false);
+                var dropdownlist = $("#ProvinciaId").data("kendoDropDownList");
+                dropdownlist.select(0);
+                dropdownlist.enable(false);
+            }
+        }
+    }
+
+
+    $('#IsContribuinte').change(
+
+        function (e) {
+            // code here to hide your text
+
+            var checked = e.currentTarget.checked;
+
+            if (checked) {
+                $(".contribuinte").show();
+                $('#ckNaoContribuinte').prop('checked', false);
+
+            }
+
+            else {
+
+                $(".contribuinte").hide();
+                $('#ckNaoContribuinte').prop('checked', true);
+
+            }
+        }
+    );
+    $('#ckNaoContribuinte').change(
+
+        function (e) {
+            // code here to hide your text
+
+            var checked = e.currentTarget.checked;
+
+            if (checked) {
+                $(".contribuinte").hide();
+                $('#IsContribuinte').prop('checked', false);
+
+            }
+
+            else {
+                $(".contribuinte").show();
+                $('#IsContribuinte').prop('checked', true);
+
+
+            }
+        }
+    );
+
+</script>

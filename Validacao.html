@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8" />
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>SIS-TFC</title>    
+        <link href="bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<link href="bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css"/>
+       
+    </head>
+
+    <body>   
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="card">
+                    <div class="card-body">
+                        <h4 class="header-title">REGISTAR UTILIZADOR</h4><hr>
+						<form onsubmit="return validarForm()" name="formulario" id="formulario" >
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  <label for="inputEmail4">Nome</label>
+								  <input onKeyUp="validarNome()" type="text" class="form-control" name="nome" id="nome">
+								  <div style="color:red" id="errorNome"></div>
+								</div>
+								<div class="form-group col-md-6">
+								  <label for="inputPassword4">BI</label>
+								  <input onKeyUp="validarBI()" type="text" class="form-control" name="bi" id="bi">
+								  <div style="color:red" id="errorBI"></div>
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  <label for="inputEmail4">Data</label>
+								  <input onchange="validarData()" type="date" class="form-control" name="data" id="data">
+								  <div style="color:red" id="errorData"></div>
+								</div>
+								<div class="form-group col-md-6">
+								  <label for="inputPassword4">Telefone</label>
+								  <input onKeyUp="validarTelefone()" type="numero" class="form-control" name="telefone" id="telefone">
+								  <div style="color:red" id="errorTelefone"></div>								
+								</div>
+							</div>
+							
+							<div class="form-row">
+								<div class="form-group col-md-6">
+								  <label for="inputEmail4">Data Picker</label>
+								  <input type="text" class="form-control" name="datapicker" id="datapicker">
+									<div class="input-group-addon">
+										<span class="btn btn-primary fa fa-calendar-alt"></span>
+									</div>
+									
+								</div>
+							</div>  
+							
+							<button id="Btn" type="submit" disabled class="btn btn-primary">Registar</button>
+						</form>
+					</div>
+				</div>	
+			</div>
+		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+		<script src="moment.min.js"></script>
+		<script src="moment.locale.js"></script>
+		<script src="bootstrap-datetimepicker.min.js"></script>
+		<script>
+			var firstOpen = true;
+			$('#datapicker').datetimepicker({
+				daysOfWeekDisabled: [0, 6],
+				format: 'DD/MM/YYYY',
+				locale: 'pt',
+				maxDate: new Date,
+				useCurrent: false,
+				//Posicionamento do calendario
+				/*widgetPositioning: {
+					horizontal: 'auto',
+					vertical: 'bottom'
+				},*/
+			}).on("dp.show", function () {
+				
+				if (firstOpen == true) {
+					$(this).data('DateTimePicker').date("#datapicker");
+					firstOpen = false;
+				}
+			}).on("dp.change", function () {
+				
+			});
+
+
+
+		
+			var estado = 0;
+			
+			$(":input").inputmask();
+			$("#telefone").inputmask({"mask": "(999) 99-99-99"});
+			
+			function printError(elemId, hintMsg) {
+				document.getElementById(elemId).innerHTML = hintMsg;
+			}
+			
+			function validarNome() {
+			
+				var nome = document.getElementById('nome').value;
+				var bi = document.getElementById('bi').value;
+			  
+				if (nome == "") {
+					document.getElementById("nome").style.border = "1px solid red";
+					printError("errorNome", "Informe um nome");				
+				} else {
+					var regex = /^[a-zA-Z\s]+$/;                
+					if(regex.test(nome) === false) {
+						printError("errorNome", "Informe um nome válido contendo apenas letras");
+						document.getElementById("nome").style.border = "1px solid red";
+					} else {
+						estado = 1;
+						printError("errorNome", "");
+						document.getElementById("nome").style.border = "1px solid #27cc71";
+					}				
+				}
+				if(estado==4){
+					document.getElementById("Btn").disabled = false;
+				}
+			}
+			
+			function validarBI() {
+				var bi = document.getElementById('bi').value;
+			  
+				if (bi == "") {
+					document.getElementById("bi").style.border = "1px solid red";
+					printError("errorBI", "Informe numero do BI");				
+				} else {
+					var regex = /^[0-9]{9}[A-Z]{2}[0-9]{3}$/;                
+					if(regex.test(bi) === false) {
+						printError("errorBI", "Informe um numero válido com 14 digitos");
+						document.getElementById("bi").style.border = "1px solid red";
+					} else {
+						estado = estado+1;
+						printError("errorBI", "");
+						document.getElementById("bi").style.border = "1px solid #27cc71";
+					}				
+				}
+				
+				if(estado==4){
+					document.getElementById("Btn").disabled = false;
+				}
+			}
+			
+			function validarTelefone() {
+				var telefone = document.getElementById('telefone').value;
+			  
+				if (telefone == "") {
+					document.getElementById("telefone").style.border = "1px solid red";
+					printError("errorTelefone", "Informe numero de Telefone");				
+				} 
+				else{
+					console.log("CONT");
+					estado = estado+1;
+					printError("errorTelefone", "");
+					document.getElementById("telefone").style.border = "1px solid #27cc71";	
+				}
+				
+				if(estado==4){
+					document.getElementById("Btn").disabled = false;
+				}
+			}
+			
+			function formatDate(date) {
+				return  date.getFullYear()+ "-" + ((date.getMonth()+1) < 10 ? "0"+(date.getMonth()+1) :
+				(date.getMonth()+1) ) + "-" + (date.getDate() < 10 ? "0"+date.getDate() : date.getDate());
+			}
+			
+			
+			function validarData() {		
+				var data = document.getElementById('data').value;
+				var today = formatDate(new Date());
+				
+				var currentDate = new Date();
+				var now = currentDate.getDate()+'/'+((currentDate.getMonth()+1) < 10 ? "0"+(currentDate.getMonth()+1):(currentDate.getMonth()+1))+'/'+currentDate.getFullYear();
+				
+				alert("DATA: "+data);
+				alert("DATA FUTURA: "+today);
+				alert("DATA FUTURA 2: "+now);
+				
+				if (data == "") {
+					document.getElementById("data").style.border = "1px solid red";
+					printError("errorData", "Informe numero de Telefone");				
+				} else if (data > today) {
+					printError("errorData", "Não é possivel escolher uma data futura.");
+					document.getElementById("data").style.border = "1px solid red";
+				} else {
+					estado = estado+1;
+					printError("errorData", "");
+					document.getElementById("data").style.border = "1px solid #27cc71";
+				}
+				
+				if(estado==4){
+					document.getElementById("Btn").disabled = false;
+				}				
+			}
+	
+		</script>
+        <script src="vendor.min.js"></script>
+        <script src="app.min.js" difer></script>
+    </body>
+</html>
